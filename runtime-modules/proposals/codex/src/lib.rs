@@ -61,6 +61,8 @@ mod proposal_types;
 #[cfg(test)]
 mod tests;
 
+mod benchmarking;
+
 use frame_support::dispatch::DispatchResult;
 use frame_support::traits::{Currency, Get};
 use frame_support::{decl_error, decl_module, decl_storage, ensure, print};

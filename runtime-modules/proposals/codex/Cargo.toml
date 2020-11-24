@@ -1,6 +1,6 @@
 [package]
 name = 'pallet-proposals-codex'
-version = '4.0.0'
+version = '4.0.1'
 authors = ['Joystream contributors']
 edition = '2018'
 
@@ -25,6 +25,7 @@ common = { package = 'pallet-common', default-features = false, path = '../../co
 proposals-engine = { package = 'pallet-proposals-engine', default-features = false, path = '../engine'}
 proposals-discussion = { package = 'pallet-proposals-discussion', default-features = false, path = '../discussion'}
 constitution = { package = 'pallet-constitution', default-features = false, path = '../../constitution'}
+frame-benchmarking = { package = 'frame-benchmarking', default-features = false, git = 'https://github.com/paritytech/substrate.git', rev = 'a200cdb93c6af5763b9c7bf313fa708764ac88ca', optional = true}
 
 [dev-dependencies]
 sp-io = { package = 'sp-io', default-features = false, git = 'https://github.com/paritytech/substrate.git', rev = 'a200cdb93c6af5763b9c7bf313fa708764ac88ca'}
@@ -36,6 +37,7 @@ strum = {version = "0.19", default-features = false}
 
 [features]
 default = ['std']
+runtime-benchmarks = ['frame-benchmarking']
 std = [
     'serde',
     'codec/std',

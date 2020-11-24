@@ -176,6 +176,7 @@ runtime-benchmarks = [
     "pallet-utility/runtime-benchmarks",
     "proposals-discussion/runtime-benchmarks",
     "proposals-engine/runtime-benchmarks",
+    "proposals-codex/runtime-benchmarks",
     "hex-literal",
 ]
 
