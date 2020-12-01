@@ -162,6 +162,8 @@ std = [
     'proposals-codex/std',
     'content-directory/std',
     'constitution/std',
+    'referendum/std',
+    'council/std',
 ]
 runtime-benchmarks = [
     "frame-system/runtime-benchmarks",

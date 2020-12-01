@@ -57,10 +57,10 @@ thread_local! {
     pub static IS_OPTION_ID_VALID: RefCell<(bool, )> = RefCell::new((true, )); // global switch used to test is_valid_option_id()
 
     // complete intermediate results
-    pub static INTERMEDIATE_RESULTS: RefCell<BTreeMap<u64, <Runtime as Trait>::VotePower>> = RefCell::new(BTreeMap::<u64, <Runtime as Trait>::VotePower>::new());
+    pub static INTERMEDIATE_RESULTS: RefCell<BTreeMap<u64, <Runtime as Trait<DefaultInstance>>::VotePower>> = RefCell::new(BTreeMap::<u64, <Runtime as Trait<DefaultInstance>>::VotePower>::new());
 }
 
-impl Trait for Runtime {
+impl Trait<DefaultInstance> for Runtime {
     type Event = TestEvent;
 
     type MaxSaltLength = MaxSaltLength;
@@ -176,7 +176,7 @@ mod tmp {
 
 impl_outer_event! {
     pub enum TestEvent for Runtime {
-        crate DefaultInstance <T>,
+        event_mod DefaultInstance <T>,
         frame_system<T>,
         tmp<T>,
     }
@@ -390,7 +390,11 @@ impl InstanceMocks<Runtime, DefaultInstance> {
 
         // check method returns expected result
         assert_eq!(
-            Module::<Runtime>::start_referendum(
+            <Module::<Runtime, DefaultInstance> as ReferendumManager<
+                <Runtime as frame_system::Trait>::Origin,
+                <Runtime as frame_system::Trait>::AccountId,
+                <Runtime as frame_system::Trait>::Hash,
+            >>::start_referendum(
                 InstanceMockUtils::<Runtime, DefaultInstance>::mock_origin(origin),
                 extra_winning_target_count,
             ),
@@ -408,7 +412,7 @@ impl InstanceMocks<Runtime, DefaultInstance> {
 
         // check method returns expected result
         assert_eq!(
-            <Module::<Runtime, Instance0> as ReferendumManager<
+            <Module::<Runtime, DefaultInstance> as ReferendumManager<
                 <Runtime as frame_system::Trait>::Origin,
                 <Runtime as frame_system::Trait>::AccountId,
                 <Runtime as frame_system::Trait>::Hash,
@@ -468,13 +472,13 @@ impl InstanceMocks<Runtime, DefaultInstance> {
                 .last()
                 .unwrap()
                 .event,
-            TestEvent::event_mod_Instance0(RawEvent::RevealingStageStarted())
+            TestEvent::event_mod_DefaultInstance(RawEvent::RevealingStageStarted())
         );
     }
 
     pub fn check_revealing_finished(
-        expected_winners: Vec<OptionResult<<Runtime as Trait>::VotePower>>,
-        expected_referendum_result: BTreeMap<u64, <Runtime as Trait>::VotePower>,
+        expected_winners: Vec<OptionResult<<Runtime as Trait<DefaultInstance>>::VotePower>>,
+        expected_referendum_result: BTreeMap<u64, <Runtime as Trait<DefaultInstance>>::VotePower>,
     ) {
         assert_eq!(
             Stage::<Runtime, DefaultInstance>::get(),
@@ -487,7 +491,7 @@ impl InstanceMocks<Runtime, DefaultInstance> {
                 .last()
                 .unwrap()
                 .event,
-            TestEvent::event_mod_Instance0(RawEvent::ReferendumFinished(expected_winners,))
+            TestEvent::event_mod_DefaultInstance(RawEvent::ReferendumFinished(expected_winners,))
         );
 
         INTERMEDIATE_RESULTS.with(|value| assert_eq!(*value.borrow(), expected_referendum_result,));
@@ -497,8 +501,8 @@ impl InstanceMocks<Runtime, DefaultInstance> {
         origin: OriginType<<Runtime as frame_system::Trait>::AccountId>,
         account_id: <Runtime as frame_system::Trait>::AccountId,
         commitment: <Runtime as frame_system::Trait>::Hash,
-        stake: Balance<Runtime, Instance0>,
-        expected_result: Result<(), Error<Runtime, Instance0>>,
+        stake: Balance<Runtime, DefaultInstance>,
+        expected_result: Result<(), Error<Runtime, DefaultInstance>>,
     ) -> () {
         // check method returns expected result
         assert_eq!(
@@ -530,7 +534,7 @@ impl InstanceMocks<Runtime, DefaultInstance> {
                 .last()
                 .unwrap()
                 .event,
-            TestEvent::crate_DefaultInstance(RawEvent::VoteCast(account_id, commitment, stake))
+            TestEvent::event_mod_DefaultInstance(RawEvent::VoteCast(account_id, commitment, stake))
         );
     }
 
@@ -561,7 +565,7 @@ impl InstanceMocks<Runtime, DefaultInstance> {
                 .last()
                 .unwrap()
                 .event,
-            TestEvent::crate_DefaultInstance(RawEvent::VoteRevealed(account_id, vote_option_index))
+            TestEvent::event_mod_DefaultInstance(RawEvent::VoteRevealed(account_id, vote_option_index))
         );
     }
 
@@ -591,7 +595,7 @@ impl InstanceMocks<Runtime, DefaultInstance> {
                 .last()
                 .unwrap()
                 .event,
-            TestEvent::crate_DefaultInstance(RawEvent::StakeReleased(account_id))
+            TestEvent::event_mod_DefaultInstance(RawEvent::StakeReleased(account_id))
         );
     }
 }

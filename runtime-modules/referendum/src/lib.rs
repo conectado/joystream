@@ -164,7 +164,7 @@ pub trait ReferendumManager<Origin, AccountId, Hash> {
 }
 
 /// The main Referendum module's trait.
-pub trait Trait<I: Instance>: frame_system::Trait {
+pub trait Trait<I = DefaultInstance>: frame_system::Trait {
     /// The overarching event type.
     type Event: From<Event<Self, I>> + Into<<Self as frame_system::Trait>::Event>;
 
