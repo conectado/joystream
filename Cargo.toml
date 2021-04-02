@@ -20,6 +20,8 @@ members = [
     "runtime-modules/utility",
 	"node",
 	"utils/chain-spec-builder/",
+]
+exclude = [
     "analyses/bench"
 ]
 
